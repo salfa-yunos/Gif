@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BDC RIPAS – Post Generator v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/omggif@1.0.10/omggif.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8001A;--red-light:#FDECEA;--red-mid:#F5B8BF;
+  --red-soft:#FAD4D7;--paper:#FFFAF8;--ink:#2C1810;
+  --ink-soft:#6B3A2A;--ink-mute:#A0766A;--gold:#B8860B;
+  --border:#EDD8CE;
+}
+
+body{
+background:#EDE6E2;font-family:‘DM Sans’,sans-serif;
+display:flex;flex-direction:column;align-items:center;
+padding:16px 12px 48px;gap:14px;min-height:100vh;
+}
+
+/* ── TOOLBAR ── */
+.toolbar{
+width:100%;max-width:640px;background:#FEFCFB;
+border:1px solid #E8DDD8;border-radius:16px;
+padding:16px 18px;display:flex;flex-direction:column;gap:12px;
+box-shadow:0 2px 14px rgba(150,80,60,.07);
+}
+.toolbar-brand{
+display:flex;align-items:center;gap:9px;
+padding-bottom:10px;border-bottom:1px solid #F0E8E4;
+}
+.brand-drop{
+width:28px;height:28px;background:var(–red);flex-shrink:0;
+clip-path:polygon(50% 0%,100% 60%,80% 100%,20% 100%,0% 60%);
+display:flex;align-items:center;justify-content:center;
+}
+.brand-drop svg{width:12px;fill:white;}
+.brand-txt{font-family:‘Playfair Display’,serif;font-size:13px;font-weight:700;color:var(–red);}
+.brand-sub{font-size:10px;color:var(–ink-mute);margin-top:1px;}
+.sec-lbl{font-size:10px;font-weight:600;letter-spacing:2px;color:#C0A9A3;text-transform:uppercase;margin-bottom:5px;}
+.fmt-row{display:flex;gap:7px;}
+.fmt-btn{
+flex:1;padding:8px 6px;background:#FEFAF8;border:1.5px solid #EAD8D0;
+border-radius:9px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .18s;
+}
+.fmt-btn:hover{border-color:#C8001A33;background:#FFF5F3;}
+.fmt-btn.active{border-color:var(–red);background:var(–red-light);}
+.fmt-icon{font-size:17px;} .fmt-label{font-size:10px;font-weight:600;color:#A08070;text-transform:uppercase;letter-spacing:.5px;}
+.fmt-btn.active .fmt-label{color:var(–red);} .fmt-size{font-size:9px;color:#C0B0A8;}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ff{grid-column:1/-1;}
+.fl{display:flex;flex-direction:column;gap:3px;}
+.fl label{font-size:10px;font-weight:600;letter-spacing:1.5px;color:#B09088;text-transform:uppercase;}
+.fl input,.fl textarea,.fl select{
+background:#FDFAF8;border:1px solid #E8D8D0;border-radius:7px;
+color:var(–ink);padding:7px 10px;font-family:‘DM Sans’,sans-serif;font-size:12px;
+transition:border-color .15s;resize:vertical;
+}
+.fl input:focus,.fl textarea:focus,.fl select:focus{outline:none;border-color:var(–red);}
+.fl textarea{min-height:60px;}
+.act-row{display:flex;gap:6px;flex-wrap:wrap;}
+.abtn{
+flex:1;min-width:88px;padding:10px 7px;border:none;border-radius:8px;cursor:pointer;
+font-family:‘DM Sans’,sans-serif;font-size:12px;font-weight:600;
+letter-spacing:.5px;text-transform:uppercase;transition:all .18s;
+}
+.abtn:disabled{opacity:.3;cursor:not-allowed;}
+.b-prev{background:var(–red);color:#fff;box-shadow:0 3px 10px rgba(200,0,26,.28);}
+.b-prev:hover:not(:disabled){background:#A8001A;}
+.b-gif{background:linear-gradient(135deg,#8B3A10,#C85000);color:#fff;}
+.b-gif:hover:not(:disabled){filter:brightness(1.1);}
+.b-mp4{background:#E8F0FE;color:#1967D2;border:1px solid #AECBFA;}
+.prog-wrap{display:none;flex-direction:column;gap:4px;}
+.prog-wrap.show{display:flex;}
+.prog-bg{width:100%;height:4px;background:#F0E8E4;border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(–red),var(–gold));border-radius:99px;width:0%;transition:width .12s;}
+.prog-txt{font-size:11px;color:#B09088;}
+
+/* ── CARD ── */
+.preview-area{display:flex;justify-content:center;}
+.card-scaler{transform-origin:top center;}
+
+.card{
+position:relative;overflow:hidden;border-radius:12px;
+background:var(–paper);
+box-shadow:0 8px 40px rgba(150,60,40,.14),0 2px 8px rgba(150,60,40,.07),0 1px 0 rgba(255,255,255,.9) inset;
+flex-shrink:0;
+}
+/* Square = 600×600, Vertical = 540×960 */
+.card.square{width:600px;height:600px;}
+.card.vertical{width:540px;height:960px;}
+
+/* BG */
+.card-bg{
+position:absolute;inset:0;z-index:0;
+background:
+radial-gradient(ellipse 55% 35% at 95% 8%, rgba(200,0,26,.07) 0%,transparent 60%),
+radial-gradient(ellipse 45% 55% at 3% 95%, rgba(180,100,60,.05) 0%,transparent 60%),
+linear-gradient(155deg,#FFFCFA 0%,#FEF4EC 55%,#FFF8F5 100%);
+}
+.grain{
+position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.4;
+background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘300’ height=‘300’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=’.85’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘300’ height=‘300’ filter=‘url(%23n)’ opacity=’.04’/%3E%3C/svg%3E”);
+}
+
+/* Decorative circles */
+.wm{
+position:absolute;right:-50px;bottom:20px;
+width:260px;height:260px;border-radius:50%;
+border:1px solid rgba(200,0,26,.06);
+background:radial-gradient(circle,rgba(200,0,26,.03),transparent 70%);
+z-index:1;animation:wmP 5s ease-in-out infinite alternate;
+}
+@keyframes wmP{from{transform:scale(.96)}to{transform:scale(1.04)}}
+.wm2{
+position:absolute;right:-80px;bottom:-10px;
+width:340px;height:340px;border-radius:50%;
+border:1px solid rgba(200,0,26,.03);z-index:1;
+}
+
+/* Left stripe + top bar */
+.stripe{
+position:absolute;left:0;top:0;bottom:26px;width:5px;z-index:5;
+background:linear-gradient(180deg,var(–red) 0%,#FF8080 50%,var(–red) 100%);
+animation:strP 3s ease-in-out infinite alternate;
+}
+@keyframes strP{from{opacity:.8}to{opacity:1}}
+.topbar-deco{
+position:absolute;top:0;left:5px;right:0;height:3px;z-index:5;
+background:linear-gradient(90deg,var(–red-soft),var(–red),var(–red-soft));
+animation:strP 4s ease-in-out infinite alternate;
+}
+
+/* Corners */
+.cn{position:absolute;width:14px;height:14px;z-index:11;pointer-events:none;}
+.cn-tl{top:7px;left:7px;border-top:1.5px solid rgba(200,0,26,.22);border-left:1.5px solid rgba(200,0,26,.22);}
+.cn-tr{top:7px;right:7px;border-top:1.5px solid rgba(200,0,26,.22);border-right:1.5px solid rgba(200,0,26,.22);}
+.cn-bl{bottom:30px;left:7px;border-bottom:1.5px solid rgba(200,0,26,.22);border-left:1.5px solid rgba(200,0,26,.22);}
+.cn-br{bottom:30px;right:7px;border-bottom:1.5px solid rgba(200,0,26,.22);border-right:1.5px solid rgba(200,0,26,.22);}
+
+/* ══ CONTENT — KEY: uses CSS grid rows so every zone gets fair space ══ */
+.content{
+position:absolute;
+top:3px;left:5px;right:0;bottom:26px;
+z-index:10;
+display:grid;
+/* rows: topbar | heading | divider | info | bt | footer */
+grid-template-rows: auto auto auto 1fr auto auto;
+padding:14px 18px 12px 16px;
+gap:0;
+overflow:hidden;
+}
+
+/* TOP BAR */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;}
+.logo-area{display:flex;align-items:center;gap:8px;}
+.logo-drop{
+width:30px;height:30px;flex-shrink:0;background:var(–red);
+clip-path:polygon(50% 0%,100% 60%,80% 100%,20% 100%,0% 60%);
+display:flex;align-items:center;justify-content:center;
+animation:dP 2s ease-in-out infinite;
+box-shadow:0 2px 10px rgba(200,0,26,.3);
+}
+@keyframes dP{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.logo-drop svg{width:13px;fill:white;}
+.org-name{font-family:‘DM Sans’,sans-serif;font-size:10px;font-weight:600;letter-spacing:1.2px;color:var(–ink-mute);text-transform:uppercase;line-height:1.4;}
+.org-name strong{display:block;color:var(–red);font-size:13px;font-weight:700;letter-spacing:.3px;}
+
+.badge{
+display:flex;align-items:center;gap:5px;
+font-family:‘DM Sans’,sans-serif;font-size:10px;font-weight:700;
+letter-spacing:1.5px;text-transform:uppercase;padding:4px 11px;
+border-radius:20px;white-space:nowrap;border:1.5px solid;
+animation:bdP 1.5s ease-in-out infinite alternate;
+}
+.badge .dot{width:6px;height:6px;border-radius:50%;animation:dotBl .9s ease-in-out infinite;flex-shrink:0;}
+@keyframes bdP{from{transform:scale(1)}to{transform:scale(1.04)}}
+@keyframes dotBl{0%,100%{opacity:1}50%{opacity:.08}}
+.b-urgent{color:var(–red);background:var(–red-light);border-color:var(–red-mid);}
+.b-urgent .dot{background:var(–red);}
+.b-update{color:#1557B0;background:#E8F0FE;border-color:#AECBFA;}
+.b-update .dot{background:#1557B0;}
+.b-info{color:#0D7050;background:#E6F4EA;border-color:#A8D5B5;}
+.b-info .dot{background:#0D7050;}
+.b-critical{color:#C85000;background:#FEF0E6;border-color:#FBCBA8;}
+.b-critical .dot{background:#C85000;}
+
+/* HEADING AREA */
+.heading-area{padding-bottom:8px;}
+.heading{
+font-family:‘Playfair Display’,serif;font-weight:900;
+color:var(–ink);line-height:1.05;letter-spacing:-.3px;
+}
+.heading .acc{color:var(–red);}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:8px;padding-bottom:10px;}
+.dl{flex:1;height:1.5px;background:linear-gradient(90deg,var(–red),var(–red-soft),transparent);}
+.dd{
+width:8px;height:8px;flex-shrink:0;background:var(–red);
+clip-path:polygon(50% 0%,100% 60%,80% 100%,20% 100%,0% 60%);
+animation:dP 2.5s ease-in-out infinite;
+}
+
+/* ══ INFO BOX — fills the 1fr row ══ */
+.info-box{
+/* fills all remaining space in the grid */
+min-height:0;
+background:white;
+border:1.5px solid var(–border);
+border-left:4px solid var(–red);
+border-radius:10px;
+padding:10px 13px 10px 11px;
+position:relative;overflow:hidden;
+box-shadow:0 2px 10px rgba(150,60,40,.06),0 1px 0 rgba(255,255,255,.9) inset;
+display:flex;flex-direction:column;
+margin-bottom:10px;
+}
+.info-box::after{
+content:’’;position:absolute;inset:0;pointer-events:none;
+background:linear-gradient(135deg,rgba(200,0,26,.025) 0%,transparent 50%);
+}
+.info-label{
+font-family:‘DM Sans’,sans-serif;font-size:9px;font-weight:700;
+letter-spacing:2.5px;color:var(–ink-mute);text-transform:uppercase;
+margin-bottom:7px;display:flex;align-items:center;gap:5px;flex-shrink:0;
+}
+.info-label::before{content:‘✒’;font-size:10px;}
+
+/* Handwriting — LARGE and readable */
+.info-text{
+font-family:‘Caveat’,cursive;
+font-weight:600;
+color:var(–ink);
+line-height:1.6;
+/* dynamic font size set by JS based on text length */
+flex:1;
+overflow:hidden;
+position:relative;z-index:1;
+}
+.cursor{
+display:inline-block;width:2px;height:.9em;
+background:var(–red);vertical-align:middle;margin-left:1px;
+animation:curBl .55s step-end infinite;
+}
+@keyframes curBl{0%,100%{opacity:1}50%{opacity:0}}
+.cursor.done{display:none;}
+
+/* BLOOD TYPES */
+.bt-section{padding-bottom:9px;}
+.bt-lbl-row{
+font-size:9px;font-weight:600;letter-spacing:2px;
+color:var(–ink-mute);text-transform:uppercase;margin-bottom:5px;
+}
+.bt-row{display:flex;gap:5px;flex-wrap:wrap;}
+.bt-chip{
+background:white;border:1.5px solid var(–border);color:var(–ink-soft);
+font-family:‘DM Sans’,sans-serif;font-size:12px;font-weight:700;
+padding:3px 10px;border-radius:20px;
+box-shadow:0 1px 3px rgba(150,60,40,.05);
+}
+.bt-chip.hl{
+background:var(–red);border-color:var(–red);color:white;
+box-shadow:0 3px 10px rgba(200,0,26,.3);
+animation:hlP 1.8s ease-in-out infinite alternate;
+}
+@keyframes hlP{from{box-shadow:0 3px 10px rgba(200,0,26,.25)}to{box-shadow:0 3px 18px rgba(200,0,26,.55)}}
+
+/* FOOTER */
+.footer{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;}
+.bk-wrap{display:flex;flex-direction:column;gap:3px;}
+.bk-lbl{font-size:8px;font-weight:600;letter-spacing:2px;color:var(–ink-mute);text-transform:uppercase;}
+.bk-tag{
+display:flex;align-items:center;gap:6px;
+background:var(–red-light);border:1.5px solid var(–red-mid);
+border-radius:8px;padding:5px 10px;
+}
+.bk-icon{
+width:17px;height:17px;background:var(–red);border-radius:50%;
+display:flex;align-items:center;justify-content:center;font-size:9px;
+animation:dP 2.2s ease-in-out infinite;box-shadow:0 2px 7px rgba(200,0,26,.28);
+}
+.bk-name{font-family:‘DM Sans’,sans-serif;font-size:13px;font-weight:800;color:var(–ink);letter-spacing:.3px;}
+.bk-name span{color:var(–red);}
+.contact{text-align:right;}
+.c-title{font-size:8px;font-weight:600;letter-spacing:2px;color:var(–ink-mute);text-transform:uppercase;margin-bottom:2px;}
+.c-line{font-family:‘DM Sans’,sans-serif;font-size:11px;font-weight:500;color:var(–ink-soft);line-height:1.5;}
+.c-line .hl{color:var(–red);font-weight:700;}
+
+/* TICKER */
+.ticker-wrap{
+position:absolute;bottom:0;left:0;right:0;height:26px;
+background:var(–red);overflow:hidden;z-index:12;
+}
+.ticker{
+display:flex;align-items:center;height:100%;
+white-space:nowrap;animation:tS 22s linear infinite;
+}
+@keyframes tS{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ti{font-family:‘DM Sans’,sans-serif;font-size:10px;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,.92);text-transform:uppercase;padding:0 18px;}
+.tsep{color:rgba(255,255,255,.35);padding:0 4px;font-size:8px;}
+
+/* ── DATE/TIME SECTION ── */
+.dt-section{
+flex-shrink:0;
+background:linear-gradient(135deg,#FFF5F3,#FDECEA);
+border:1.5px solid var(–red-mid);
+border-radius:10px;
+padding:8px 13px 8px 11px;
+position:relative;overflow:hidden;
+}
+.dt-section::before{
+content:’’;position:absolute;left:0;top:0;bottom:0;
+width:3px;background:linear-gradient(180deg,var(–red),var(–red-soft));
+}
+.dt-header{
+display:flex;align-items:center;gap:6px;
+font-family:‘DM Sans’,sans-serif;
+font-size:9px;font-weight:700;letter-spacing:2px;
+color:var(–red);text-transform:uppercase;
+margin-bottom:5px;padding-left:6px;
+}
+.dt-header::before{content:‘📅’;font-size:11px;}
+.dt-title-line{
+font-family:‘DM Sans’,sans-serif;
+font-size:11px;font-weight:600;color:var(–ink-soft);
+padding-left:6px;margin-bottom:1px;
+}
+.dt-dates{
+font-family:‘Playfair Display’,serif;
+font-size:14px;font-weight:700;color:var(–ink);
+padding-left:6px;margin-bottom:5px;line-height:1.2;
+}
+.dt-session{
+display:flex;flex-direction:column;gap:0px;
+padding-left:6px;margin-bottom:3px;
+}
+.dt-session:last-child{margin-bottom:0;}
+.dt-sess-label{
+font-family:‘DM Sans’,sans-serif;
+font-size:9px;font-weight:700;letter-spacing:1.5px;
+color:var(–red);text-transform:uppercase;
+}
+.dt-time{
+font-family:‘Caveat’,cursive;
+font-size:16px;font-weight:700;color:var(–ink);line-height:1.25;
+}
+.dt-venue{
+font-family:‘DM Sans’,sans-serif;
+font-size:10px;font-weight:500;color:var(–ink-mute);
+display:flex;align-items:flex-start;gap:3px;line-height:1.35;
+}
+.dt-sep{
+height:1px;background:linear-gradient(90deg,var(–red-soft),transparent);
+margin:3px 0 3px 6px;
+}
+/* toolbar section divider */
+.sec-divider{
+border:none;border-top:1px dashed #E8D8D0;margin:2px 0;
+}
+
+/* ── TIPS ── */
+.tips{
+width:100%;max-width:640px;background:#FDFBFA;
+border:1px solid #EAE0DC;border-radius:10px;
+padding:10px 14px;display:flex;flex-direction:column;gap:3px;
+}
+.tips-ttl{font-size:10px;font-weight:600;letter-spacing:2px;color:#C0A9A3;text-transform:uppercase;margin-bottom:2px;}
+.tip{font-size:11px;color:#A09088;line-height:1.5;}
+.tip b{color:#806860;}
+</style>
+
+</head>
+<body>
+
+<!-- TOOLBAR -->
+
+<div class="toolbar">
+  <div class="toolbar-brand">
+    <div class="brand-drop">
+      <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg"><path d="M50 5C50 5 10 55 10 80C10 105 28 125 50 125C72 125 90 105 90 80C90 55 50 5 50 5Z"/></svg>
+    </div>
+    <div><div class="brand-txt">BDC RIPAS Post Generator</div><div class="brand-sub">v5 · Proportional · Handwriting</div></div>
+  </div>
+
+  <div>
+    <div class="sec-lbl">Format</div>
+    <div class="fmt-row">
+      <button class="fmt-btn active" onclick="setFormat('square',this)">
+        <span class="fmt-icon">⬛</span><span class="fmt-label">Square 1:1</span><span class="fmt-size">Instagram Feed</span>
+      </button>
+      <button class="fmt-btn" onclick="setFormat('vertical',this)">
+        <span class="fmt-icon">📱</span><span class="fmt-label">Vertical 9:16</span><span class="fmt-size">WhatsApp / Stories</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="fg">
+    <div class="fl ff"><label>Heading (use : for red accent)</label><input type="text" id="fH" value="URGENT: BLOOD NEEDED" maxlength="55"></div>
+    <div class="fl ff"><label>Information (handwritten, keep concise)</label><textarea id="fS">We are in critical need of blood donors at RIPAS Hospital. All blood types are needed urgently. Please come forward and help save lives today.</textarea></div>
+    <div class="fl ff"><label>Blood Types (comma-separated — blank hides row)</label><input type="text" id="fBT" value="A+, A-, B+, B-, O+, O-, AB+, AB-"></div>
+    <div class="fl"><label>Highlighted Type</label><input type="text" id="fHL" value="O-"></div>
+    <div class="fl"><label>Badge</label>
+      <select id="fBadge">
+        <option value="urgent">🔴 URGENT</option>
+        <option value="update">🔵 UPDATE</option>
+        <option value="info">🟢 INFO</option>
+        <option value="critical">🟠 CRITICAL</option>
+      </select>
+    </div>
+    <div class="fl ff"><label>Ticker Text</label><input type="text" id="fTick" value="Every drop counts — your donation saves lives — visit BDC RIPAS today"></div>
+    <div class="fl"><label>Date / Tag (ticker)</label><input type="text" id="fDate" value="March 2026"></div>
+  </div>
+
+  <!-- DATE/TIME FIELDS -->
+
+  <hr class="sec-divider">
+  <div class="sec-lbl" style="margin-bottom:0">📅 Date &amp; Time Schedule</div>
+  <div class="fg">
+    <div class="fl ff"><label>Day / Date Title</label><input type="text" id="evTitle" value="Tarikh: Selasa / Rabu / Khamis"></div>
+    <div class="fl ff"><label>Date Numbers</label><input type="text" id="evDates" value="17, 18 &amp; 19 Mac 2026"></div>
+    <div class="fl"><label>🌅 Morning Label</label><input type="text" id="evMornLbl" value="Waktu Pagi:"></div>
+    <div class="fl"><label>🌅 Morning Hours</label><input type="text" id="evMornTime" value="8.00 pagi – 12.00 tengah hari"></div>
+    <div class="fl ff"><label>📍 Morning Venue</label><input type="text" id="evMornVenue" value="Pusat Pendermaan Darah, Hospital RIPAS"></div>
+    <div class="fl"><label>🌙 Evening Label</label><input type="text" id="evNightLbl" value="Waktu Malam (tarikh terpilih):"></div>
+    <div class="fl"><label>🌙 Evening Hours</label><input type="text" id="evNightTime" value="8.00 malam – 9.30 malam"></div>
+    <div class="fl ff"><label>📍 Evening Venue</label><input type="text" id="evNightVenue" value="Annajat Complex Hotel"></div>
+    <div class="fl ff" style="flex-direction:row;align-items:center;gap:8px;">
+      <input type="checkbox" id="showNight" checked style="width:15px;height:15px;accent-color:var(--red);flex-shrink:0;cursor:pointer;">
+      <label for="showNight" style="font-size:11px;color:#A08070;text-transform:none;letter-spacing:.3px;cursor:pointer;">Show evening session</label>
+    </div>
+    <div class="fl ff" style="flex-direction:row;align-items:center;gap:8px;">
+      <input type="checkbox" id="showDT" checked style="width:15px;height:15px;accent-color:var(--red);flex-shrink:0;cursor:pointer;">
+      <label for="showDT" style="font-size:11px;color:#A08070;text-transform:none;letter-spacing:.3px;cursor:pointer;">Show date/time section on card</label>
+    </div>
+  </div>
+
+  <div class="act-row">
+    <button class="abtn b-prev" onclick="applyChanges(true)">▶ Update</button>
+    <button class="abtn b-gif" id="btnGif" onclick="exportGIF()">🎞 Save GIF</button>
+    <button class="abtn b-mp4" id="btnMp4" onclick="exportMP4()">🎬 Save MP4</button>
+  </div>
+  <div class="prog-wrap" id="progWrap">
+    <div class="prog-bg"><div class="prog-fill" id="progFill"></div></div>
+    <div class="prog-txt" id="progTxt">Working...</div>
+  </div>
+</div>
+
+<!-- CARD -->
+
+<div class="preview-area">
+<div class="card-scaler" id="scaler">
+<div class="card square" id="card">
+  <div class="card-bg"></div>
+  <div class="grain"></div>
+  <div class="wm"></div><div class="wm2"></div>
+  <div class="stripe"></div>
+  <div class="topbar-deco"></div>
+  <div class="cn cn-tl"></div><div class="cn cn-tr"></div>
+  <div class="cn cn-bl"></div><div class="cn cn-br"></div>
+
+  <div class="content">
+
+```
+<!-- 1. TOP BAR -->
+<div class="top-bar">
+  <div class="logo-area">
+    <div class="logo-drop">
+      <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg"><path d="M50 5C50 5 10 55 10 80C10 105 28 125 50 125C72 125 90 105 90 80C90 55 50 5 50 5Z"/></svg>
+    </div>
+    <div class="org-name"><strong>BDC RIPAS</strong>Blood Donation Centre</div>
+  </div>
+  <div class="badge b-urgent" id="cardBadge"><span class="dot"></span><span id="cardBadgeTxt">URGENT</span></div>
+</div>
+
+<!-- 2. HEADING -->
+<div class="heading-area">
+  <div class="heading" id="cardHeading">URGENT: <span class="acc">BLOOD NEEDED</span></div>
+</div>
+
+<!-- 3. DIVIDER -->
+<div class="divider"><div class="dl"></div><div class="dd"></div></div>
+
+<!-- 4+5. INFO + DATE/TIME share the 1fr row -->
+<div id="infoDateWrapper" style="display:flex;flex-direction:column;gap:8px;min-height:0;margin-bottom:0;overflow:hidden;">
+
+<div class="info-box" style="flex:1;min-height:0;">
+  <div class="info-label">Information</div>
+  <div class="info-text" id="infoText">
+    <span id="writtenText"></span><span class="cursor" id="cursor"></span>
+  </div>
+</div>
+
+<div class="dt-section" id="dtSection" style="flex-shrink:0;">
+  <div class="dt-header">Jadual / Schedule</div>
+  <div class="dt-title-line" id="dtTitleLine">Tarikh: Selasa / Rabu / Khamis</div>
+  <div class="dt-dates" id="dtDates">17, 18 &amp; 19 Mac 2026</div>
+  <div class="dt-session">
+    <div class="dt-sess-label" id="dtMornLbl">Waktu Pagi:</div>
+    <div class="dt-time" id="dtMornTime">8.00 pagi – 12.00 tengah hari</div>
+    <div class="dt-venue"><span>📍</span><span id="dtMornVenue">Pusat Pendermaan Darah, Hospital RIPAS</span></div>
+  </div>
+  <div class="dt-sep"></div>
+  <div class="dt-session" id="dtNightSess">
+    <div class="dt-sess-label" id="dtNightLbl">Waktu Malam (tarikh terpilih):</div>
+    <div class="dt-time" id="dtNightTime">8.00 malam – 9.30 malam</div>
+    <div class="dt-venue"><span>📍</span><span id="dtNightVenue">Annajat Complex Hotel</span></div>
+  </div>
+</div>
+
+</div><!-- /infoDateWrapper -->
+
+<!-- 6. BLOOD TYPES -->
+<div class="bt-section" id="btSection">
+  <div class="bt-lbl-row">Blood Types Needed</div>
+  <div class="bt-row" id="cardBT"></div>
+</div>
+
+<!-- 6. FOOTER -->
+<div class="footer">
+  <div class="bk-wrap">
+    <span class="bk-lbl">Register with</span>
+    <div class="bk-tag">
+      <div class="bk-icon">🩸</div>
+      <div class="bk-name">BLOOD<span>KAD</span></div>
+    </div>
+  </div>
+  <div class="contact">
+    <div class="c-title">Contact BDC RIPAS</div>
+    <div class="c-line">📞 <span class="hl">+673 224 2424</span> ext. 5530 / 5531</div>
+    <div class="c-line">📍 RIPAS Hospital, Bandar Seri Begawan</div>
+    <div class="c-line">🕐 Mon–Sat: <span class="hl">7:30am – 3:30pm</span></div>
+  </div>
+</div>
+```
+
+  </div><!-- /content -->
+
+  <div class="ticker-wrap">
+    <div class="ticker" id="cardTicker"></div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- TIPS -->
+
+<div class="tips">
+  <div class="tips-ttl">💡 Tips</div>
+  <div class="tip"><b>Info box</b> fills all the space between heading and blood types — no dead space regardless of text length.</div>
+  <div class="tip"><b>Font size</b> auto-adjusts: short text = bigger font (easier to read), long text = smaller but still legible.</div>
+  <div class="tip"><b>GIF export</b> — Use Chrome on desktop. Wait for handwriting to finish, then export.</div>
+</div>
+
+<script>
+var currentFormat='square';
+var writeTimer=null;
+
+function setFormat(fmt,btn){
+  currentFormat=fmt;
+  document.querySelectorAll('.fmt-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  var card=document.getElementById('card');
+  card.classList.remove('square','vertical');
+  card.classList.add(fmt);
+  applyChanges(false);
+  setTimeout(scaleCard,80);
+}
+
+function scaleCard(){
+  var card=document.getElementById('card');
+  var scaler=document.getElementById('scaler');
+  var maxW=Math.min(window.innerWidth-26,640);
+  var scale=Math.min(1,maxW/card.offsetWidth);
+  scaler.style.transform='scale('+scale+')';
+  scaler.style.width=card.offsetWidth+'px';
+  scaler.style.height=(card.offsetHeight*scale)+'px';
+}
+window.addEventListener('resize',scaleCard);
+
+/* Font size: bigger for short text, smaller for long */
+function calcFontSize(text){
+  var n=text.length;
+  var sq=currentFormat==='square';
+  if(n<=80)  return sq?'34px':'38px';
+  if(n<=140) return sq?'30px':'34px';
+  if(n<=200) return sq?'27px':'31px';
+  if(n<=280) return sq?'24px':'27px';
+  if(n<=360) return sq?'22px':'25px';
+  return sq?'20px':'23px';
+}
+
+/* Animate writing */
+function animateWrite(text,onDone){
+  if(writeTimer)clearInterval(writeTimer);
+  var el=document.getElementById('writtenText');
+  var cur=document.getElementById('cursor');
+  el.textContent='';
+  cur.classList.remove('done');
+  var i=0;
+  var speed=Math.max(18, Math.min(40, 5000/text.length)); // adaptive speed
+  writeTimer=setInterval(function(){
+    if(i<text.length){el.textContent+=text[i];i++;}
+    else{clearInterval(writeTimer);cur.classList.add('done');if(onDone)onDone();}
+  },speed);
+}
+
+function applyChanges(animate){
+  // Heading
+  var rawH=document.getElementById('fH').value||'BLOOD NEEDED';
+  var parts=rawH.split(':');
+  var hHTML=parts.length>=2
+    ?parts[0]+': <span class="acc">'+parts.slice(1).join(':').trim()+'</span>'
+    :'<span class="acc">'+rawH+'</span>';
+  var hEl=document.getElementById('cardHeading');
+  hEl.innerHTML=hHTML;
+  var hl=rawH.length,isV=currentFormat==='vertical';
+  hEl.style.fontSize=hl>30?(isV?'36px':'28px'):hl>22?(isV?'44px':'36px'):(isV?'52px':'44px');
+
+  // Info
+  var txt=document.getElementById('fS').value||'';
+  document.getElementById('infoText').style.fontSize=calcFontSize(txt);
+  if(animate){ animateWrite(txt); }
+  else{ document.getElementById('writtenText').textContent=txt; document.getElementById('cursor').classList.add('done'); }
+
+  // Blood types
+  var btVal=document.getElementById('fBT').value.trim();
+  var hlVal=document.getElementById('fHL').value.trim().toUpperCase();
+  var btRow=document.getElementById('cardBT');
+  var btSec=document.getElementById('btSection');
+  btRow.innerHTML='';
+  if(btVal){
+    btVal.split(',').forEach(function(t){
+      var c=document.createElement('span');
+      c.className='bt-chip'+(t.trim().toUpperCase()===hlVal?' hl':'');
+      c.textContent=t.trim();btRow.appendChild(c);
+    });
+    btSec.style.display='block';
+  } else { btSec.style.display='none'; }
+
+  // Date/Time section
+  var showDT=document.getElementById('showDT').checked;
+  var dtSec=document.getElementById('dtSection');
+  dtSec.style.display=showDT?'block':'none';
+  if(showDT){
+    document.getElementById('dtTitleLine').textContent=document.getElementById('evTitle').value;
+    document.getElementById('dtDates').textContent=document.getElementById('evDates').value;
+    document.getElementById('dtMornLbl').textContent=document.getElementById('evMornLbl').value;
+    document.getElementById('dtMornTime').textContent=document.getElementById('evMornTime').value;
+    document.getElementById('dtMornVenue').textContent=document.getElementById('evMornVenue').value;
+    document.getElementById('dtNightLbl').textContent=document.getElementById('evNightLbl').value;
+    document.getElementById('dtNightTime').textContent=document.getElementById('evNightTime').value;
+    document.getElementById('dtNightVenue').textContent=document.getElementById('evNightVenue').value;
+    var showN=document.getElementById('showNight').checked;
+    document.getElementById('dtNightSess').style.display=showN?'flex':'none';
+    document.querySelector('.dt-sep').style.display=showN?'block':'none';
+  }
+
+  // Badge
+  var bv=document.getElementById('fBadge').value;
+  var bEl=document.getElementById('cardBadge');
+  ['b-urgent','b-update','b-info','b-critical'].forEach(c=>bEl.classList.remove(c));
+  bEl.classList.add('b-'+bv);
+  document.getElementById('cardBadgeTxt').textContent=bv.toUpperCase();
+
+  // Ticker
+  var tick=document.getElementById('fTick').value;
+  var date=document.getElementById('fDate').value;
+  var rep='<span class="ti">'+tick+'</span><span class="tsep">◆</span><span class="ti">'+date+'</span><span class="tsep">◆</span><span class="ti">Bloodkad — register your donor card</span><span class="tsep">◆</span>';
+  document.getElementById('cardTicker').innerHTML=rep+rep;
+
+  setTimeout(scaleCard,100);
+}
+
+/* Progress helpers */
+function setP(msg,pct){var w=document.getElementById('progWrap');w.classList.add('show');document.getElementById('progTxt').textContent=msg;document.getElementById('progFill').style.width=pct+'%';}
+function clrP(){document.getElementById('progWrap').classList.remove('show');}
+function dis(v){document.getElementById('btnGif').disabled=v;document.getElementById('btnMp4').disabled=v;}
+
+/* GIF Export */
+async function exportGIF(){
+  dis(true);setP('Preparing...',2);
+  if(writeTimer)clearInterval(writeTimer);
+  var rawTxt=document.getElementById('fS').value||'';
+  document.getElementById('writtenText').textContent=rawTxt;
+  document.getElementById('cursor').classList.add('done');
+
+  var scaler=document.getElementById('scaler');
+  var prevT=scaler.style.transform;
+  scaler.style.transform='scale(1)';
+  await new Promise(r=>setTimeout(r,80));
+
+  var card=document.getElementById('card');
+  var W=card.offsetWidth,H=card.offsetHeight;
+  var fps=8,dur=4,total=fps*dur,frames=[];
+
+  for(var i=0;i<total;i++){
+    setP('Capturing frame '+(i+1)+'/'+total,2+(i/total)*52);
+    await new Promise(r=>requestAnimationFrame(r));
+    await new Promise(r=>setTimeout(r,130));
+    try{
+      var canvas=await html2canvas(card,{scale:1,useCORS:true,allowTaint:true,backgroundColor:'#FFFAF8',logging:false,imageTimeout:3000});
+      frames.push(canvas);
+    }catch(e){console.warn(e);}
+  }
+  scaler.style.transform=prevT;
+
+  if(!frames.length){alert('Capture failed. Use Chrome on desktop.');dis(false);clrP();return;}
+  setP('Encoding GIF...',56);
+  await new Promise(r=>setTimeout(r,30));
+
+  try{
+    var buf=new Uint8Array(W*H*frames.length*5+2097152);
+    var writer=new GifWriter(buf,W,H,{loop:0});
+    for(var fi=0;fi<frames.length;fi++){
+      setP('Encoding '+(fi+1)+'/'+frames.length,56+(fi/frames.length)*40);
+      await new Promise(r=>setTimeout(r,1));
+      var ctx=frames[fi].getContext('2d');
+      var imgD=ctx.getImageData(0,0,W,H).data;
+      var palMap={},pal=[],indexed=new Uint8Array(W*H);
+      for(var p=0;p<W*H;p++){
+        var r2=imgD[p*4]>>2<<2,g2=imgD[p*4+1]>>2<<2,b2=imgD[p*4+2]>>2<<2;
+        var key=r2+','+g2+','+b2;
+        if(palMap[key]===undefined){palMap[key]=pal.length/3;pal.push(r2,g2,b2);}
+        indexed[p]=Math.min(palMap[key],255);
+      }
+      while(pal.length<768)pal.push(0,0,0);
+      pal=pal.slice(0,768);
+      var upal=new Uint32Array(256);
+      for(var pi=0;pi<256;pi++)upal[pi]=(pal[pi*3]<<16)|(pal[pi*3+1]<<8)|pal[pi*3+2];
+      writer.addFrame(0,0,W,H,indexed,{palette:upal,delay:Math.round(100/fps)});
+    }
+    var gifBuf=buf.slice(0,writer.end());
+    var blob=new Blob([gifBuf],{type:'image/gif'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='BDC_RIPAS_Post.gif';a.click();
+    setP('✅ GIF saved!',100);
+    setTimeout(function(){clrP();dis(false);},2000);
+  }catch(e){
+    console.error(e);
+    setP('Saving PNG fallback...',90);
+    frames[0].toBlob(function(blob){
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');a.href=url;a.download='BDC_RIPAS_Post.png';a.click();
+      setTimeout(function(){clrP();dis(false);},1500);
+    });
+  }
+}
+
+/* MP4 Export */
+async function exportMP4(){
+  dis(true);
+  if(writeTimer)clearInterval(writeTimer);
+  document.getElementById('writtenText').textContent=document.getElementById('fS').value||'';
+  document.getElementById('cursor').classList.add('done');
+
+  var scaler=document.getElementById('scaler');
+  var prevT=scaler.style.transform;
+  scaler.style.transform='scale(1)';
+  await new Promise(r=>setTimeout(r,60));
+
+  var card=document.getElementById('card');
+  var W=card.offsetWidth,H=card.offsetHeight;
+  var off=document.createElement('canvas');off.width=W;off.height=H;
+  var ctx=off.getContext('2d');
+  var stream=off.captureStream(24);
+  var mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';
+  var rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4000000});
+  var chunks=[];
+  rec.ondataavailable=function(e){if(e.data.size>0)chunks.push(e.data);};
+  rec.onstop=function(){
+    setP('Saving...',95);
+    var blob=new Blob(chunks,{type:'video/webm'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='BDC_RIPAS_Post.webm';a.click();
+    scaler.style.transform=prevT;
+    setTimeout(function(){clrP();dis(false);},1500);
+  };
+  rec.start(100);
+  setP('Recording...',5);
+  var elapsed=0,total=6000,interval=1000/24;
+  async function frame(){
+    if(elapsed>=total){rec.stop();return;}
+    try{
+      var snap=await html2canvas(card,{scale:1,useCORS:true,allowTaint:true,backgroundColor:'#FFFAF8',logging:false,imageTimeout:1000});
+      ctx.clearRect(0,0,W,H);ctx.drawImage(snap,0,0);
+    }catch(e){}
+    elapsed+=interval;
+    setP('Recording '+(elapsed/1000).toFixed(1)+'s / 6s',5+(elapsed/total)*85);
+    setTimeout(frame,interval);
+  }
+  frame();
+}
+
+// Init
+applyChanges(true);
+setTimeout(scaleCard,400);
+</script>
+
+</body>
+</html>

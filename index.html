@@ -4,8 +4,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BDC RIPAS – Post Generator v6</title>
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<title>BDC RIPAS – Post Generator v7</title>
+<!--
+  FONTS:
+  - Libre Baskerville  → Headings (formal, highly legible serif)
+  - Source Sans 3      → All UI labels, body, contact, blood chips (clean, accessible, large-print friendly)
+  - Special Elite      → Info box typewriter text + schedule times only
+-->
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@400;600;700;900&family=Special+Elite&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/omggif@1.0.10/omggif.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -16,58 +22,56 @@
   --red-mid:#F5B8BF;
   --red-soft:#FAD4D7;
   --paper:#FFFAF8;
-  --ink:#2C1810;
-  --ink-soft:#6B3A2A;
-  --ink-mute:#A0766A;
+  --ink:#1A1008;
+  --ink-soft:#4A2810;
+  --ink-mute:#7A5040;
   --gold:#B8860B;
-  --border:#EDD8CE;
+  --border:#DEC8BC;
 }
 
 body{
-background:#EDE6E2;
-font-family:‘DM Sans’,sans-serif;
+background:#E8E0DA;
+font-family:‘Source Sans 3’,sans-serif;
 display:flex;flex-direction:column;align-items:center;
-padding:16px 12px 48px;gap:14px;min-height:100vh;
+padding:16px 12px 56px;gap:14px;min-height:100vh;
 }
 
-/* ── TOOLBAR ── */
+/* ══ TOOLBAR ══ */
 .toolbar{
 width:100%;max-width:640px;background:#FEFCFB;
-border:1px solid #E8DDD8;border-radius:16px;
+border:1px solid #E2D8D0;border-radius:16px;
 padding:16px 18px;display:flex;flex-direction:column;gap:12px;
-box-shadow:0 2px 14px rgba(150,80,60,.07);
+box-shadow:0 2px 16px rgba(120,60,40,.08);
 }
-.toolbar-brand{
-display:flex;align-items:center;gap:9px;
-padding-bottom:10px;border-bottom:1px solid #F0E8E4;
-}
+.toolbar-brand{display:flex;align-items:center;gap:9px;padding-bottom:10px;border-bottom:1px solid #EEE4DC;}
 .brand-drop{
 width:28px;height:28px;background:var(–red);flex-shrink:0;
 clip-path:polygon(50% 0%,100% 60%,80% 100%,20% 100%,0% 60%);
 display:flex;align-items:center;justify-content:center;
 }
 .brand-drop svg{width:12px;fill:white;}
-.brand-txt{font-family:‘Playfair Display’,serif;font-size:13px;font-weight:700;color:var(–red);}
-.brand-sub{font-size:10px;color:var(–ink-mute);margin-top:1px;}
-.sec-lbl{font-size:10px;font-weight:600;letter-spacing:2px;color:#C0A9A3;text-transform:uppercase;margin-bottom:5px;}
+.brand-txt{font-family:‘Libre Baskerville’,serif;font-size:13px;font-weight:700;color:var(–red);}
+.brand-sub{font-size:10px;color:var(–ink-mute);margin-top:1px;font-family:‘Source Sans 3’,sans-serif;}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:2px;color:#B09888;text-transform:uppercase;margin-bottom:5px;}
 .fmt-row{display:flex;gap:7px;}
 .fmt-btn{
-flex:1;padding:8px 6px;background:#FEFAF8;border:1.5px solid #EAD8D0;
+flex:1;padding:8px 6px;background:#FEFAF8;border:1.5px solid #E8D0C8;
 border-radius:9px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .18s;
 }
-.fmt-btn:hover{border-color:#C8001A33;background:#FFF5F3;}
+.fmt-btn:hover{border-color:#C8001A44;background:#FFF5F3;}
 .fmt-btn.active{border-color:var(–red);background:var(–red-light);}
 .fmt-icon{font-size:17px;}
-.fmt-label{font-size:10px;font-weight:600;color:#A08070;text-transform:uppercase;letter-spacing:.5px;}
+.fmt-label{font-size:10px;font-weight:700;color:#907868;text-transform:uppercase;letter-spacing:.5px;}
 .fmt-btn.active .fmt-label{color:var(–red);}
-.fmt-size{font-size:9px;color:#C0B0A8;}
+.fmt-size{font-size:9px;color:#B8A098;}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .ff{grid-column:1/-1;}
 .fl{display:flex;flex-direction:column;gap:3px;}
-.fl label{font-size:10px;font-weight:600;letter-spacing:1.5px;color:#B09088;text-transform:uppercase;}
+.fl label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#A08878;text-transform:uppercase;}
 .fl input,.fl textarea,.fl select{
-background:#FDFAF8;border:1px solid #E8D8D0;border-radius:7px;
-color:var(–ink);padding:7px 10px;font-family:‘DM Sans’,sans-serif;font-size:12px;
+background:#FDFAF8;border:1px solid #E0D0C8;border-radius:7px;
+color:var(–ink);padding:7px 10px;
+font-family:‘Source Sans 3’,sans-serif;font-size:13px;
 transition:border-color .15s;resize:vertical;
 }
 .fl input:focus,.fl textarea:focus,.fl select:focus{outline:none;border-color:var(–red);}
@@ -75,7 +79,7 @@ transition:border-color .15s;resize:vertical;
 .act-row{display:flex;gap:6px;flex-wrap:wrap;}
 .abtn{
 flex:1;min-width:88px;padding:10px 7px;border:none;border-radius:8px;cursor:pointer;
-font-family:‘DM Sans’,sans-serif;font-size:12px;font-weight:600;
+font-family:‘Source Sans 3’,sans-serif;font-size:12px;font-weight:700;
 letter-spacing:.5px;text-transform:uppercase;transition:all .18s;
 }
 .abtn:disabled{opacity:.3;cursor:not-allowed;}
@@ -88,69 +92,49 @@ letter-spacing:.5px;text-transform:uppercase;transition:all .18s;
 .prog-wrap.show{display:flex;}
 .prog-bg{width:100%;height:4px;background:#F0E8E4;border-radius:99px;overflow:hidden;}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(–red),var(–gold));border-radius:99px;width:0%;transition:width .12s;}
-.prog-txt{font-size:11px;color:#B09088;}
-.sec-divider{border:none;border-top:1px dashed #E8D8D0;margin:2px 0;}
+.prog-txt{font-size:11px;color:#A09088;font-family:‘Source Sans 3’,sans-serif;}
+.sec-divider{border:none;border-top:1px dashed #E0D0C8;margin:2px 0;}
 
-/* ── CARD ── */
+/* ══ CARD ══ */
 .preview-area{display:flex;justify-content:center;}
 .card-scaler{transform-origin:top center;}
 
 .card{
 position:relative;overflow:hidden;border-radius:12px;
 background:var(–paper);
-box-shadow:0 8px 40px rgba(150,60,40,.14),0 2px 8px rgba(150,60,40,.07),0 1px 0 rgba(255,255,255,.9) inset;
+box-shadow:0 8px 40px rgba(120,50,30,.15),0 2px 8px rgba(120,50,30,.08),0 1px 0 rgba(255,255,255,.9) inset;
 flex-shrink:0;
 }
 .card.square{width:600px;height:600px;}
 .card.vertical{width:540px;height:960px;}
 
-/* BG */
+/* BG gradient */
 .card-bg{
 position:absolute;inset:0;z-index:0;
 background:
 radial-gradient(ellipse 55% 35% at 95% 8%, rgba(200,0,26,.07) 0%,transparent 60%),
 radial-gradient(ellipse 45% 55% at 3% 95%, rgba(180,100,60,.05) 0%,transparent 60%),
-linear-gradient(155deg,#FFFCFA 0%,#FEF4EC 55%,#FFF8F5 100%);
+linear-gradient(155deg,#FFFCFA 0%,#FEF5EC 55%,#FFF8F5 100%);
 }
 .grain{
-position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.4;
+position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.35;
 background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘300’ height=‘300’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=’.85’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘300’ height=‘300’ filter=‘url(%23n)’ opacity=’.04’/%3E%3C/svg%3E”);
 }
-
-/* Decorative circles */
-.wm{
-position:absolute;right:-50px;bottom:20px;
-width:260px;height:260px;border-radius:50%;
-border:1px solid rgba(200,0,26,.06);
-background:radial-gradient(circle,rgba(200,0,26,.03),transparent 70%);
-z-index:1;animation:wmP 5s ease-in-out infinite alternate;
-}
+.wm{position:absolute;right:-50px;bottom:20px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(200,0,26,.05);background:radial-gradient(circle,rgba(200,0,26,.03),transparent 70%);z-index:1;animation:wmP 5s ease-in-out infinite alternate;}
 @keyframes wmP{from{transform:scale(.96)}to{transform:scale(1.04)}}
-.wm2{
-position:absolute;right:-80px;bottom:-10px;
-width:340px;height:340px;border-radius:50%;
-border:1px solid rgba(200,0,26,.03);z-index:1;
-}
+.wm2{position:absolute;right:-80px;bottom:-10px;width:340px;height:340px;border-radius:50%;border:1px solid rgba(200,0,26,.03);z-index:1;}
 
-/* Left stripe + top bar */
-.stripe{
-position:absolute;left:0;top:0;bottom:26px;width:5px;z-index:5;
-background:linear-gradient(180deg,var(–red) 0%,#FF8080 50%,var(–red) 100%);
-animation:strP 3s ease-in-out infinite alternate;
-}
-@keyframes strP{from{opacity:.8}to{opacity:1}}
-.topbar-deco{
-position:absolute;top:0;left:5px;right:0;height:3px;z-index:5;
-background:linear-gradient(90deg,var(–red-soft),var(–red),var(–red-soft));
-animation:strP 4s ease-in-out infinite alternate;
-}
+/* Left stripe + top decoration */
+.stripe{position:absolute;left:0;top:0;bottom:26px;width:5px;z-index:5;background:linear-gradient(180deg,var(–red) 0%,#FF7070 50%,var(–red) 100%);animation:strP 3s ease-in-out infinite alternate;}
+@keyframes strP{from{opacity:.75}to{opacity:1}}
+.topbar-deco{position:absolute;top:0;left:5px;right:0;height:3px;z-index:5;background:linear-gradient(90deg,var(–red-soft),var(–red),var(–red-soft));}
 
-/* Corners */
+/* Corner marks */
 .cn{position:absolute;width:14px;height:14px;z-index:11;pointer-events:none;}
-.cn-tl{top:7px;left:7px;border-top:1.5px solid rgba(200,0,26,.22);border-left:1.5px solid rgba(200,0,26,.22);}
-.cn-tr{top:7px;right:7px;border-top:1.5px solid rgba(200,0,26,.22);border-right:1.5px solid rgba(200,0,26,.22);}
-.cn-bl{bottom:30px;left:7px;border-bottom:1.5px solid rgba(200,0,26,.22);border-left:1.5px solid rgba(200,0,26,.22);}
-.cn-br{bottom:30px;right:7px;border-bottom:1.5px solid rgba(200,0,26,.22);border-right:1.5px solid rgba(200,0,26,.22);}
+.cn-tl{top:7px;left:7px;border-top:1.5px solid rgba(200,0,26,.2);border-left:1.5px solid rgba(200,0,26,.2);}
+.cn-tr{top:7px;right:7px;border-top:1.5px solid rgba(200,0,26,.2);border-right:1.5px solid rgba(200,0,26,.2);}
+.cn-bl{bottom:30px;left:7px;border-bottom:1.5px solid rgba(200,0,26,.2);border-left:1.5px solid rgba(200,0,26,.2);}
+.cn-br{bottom:30px;right:7px;border-bottom:1.5px solid rgba(200,0,26,.2);border-right:1.5px solid rgba(200,0,26,.2);}
 
 /* ══ CONTENT GRID ══ */
 .content{
@@ -160,44 +144,38 @@ z-index:10;
 display:grid;
 grid-template-rows: auto auto auto 1fr auto auto;
 padding:12px 16px 10px 14px;
-gap:0;
 overflow:hidden;
 }
 
-/* TOP BAR */
+/* ── TOP BAR ── */
 .top-bar{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;}
 .logo-area{display:flex;align-items:center;gap:8px;}
 .logo-drop{
-width:30px;height:30px;flex-shrink:0;background:var(–red);
+width:32px;height:32px;flex-shrink:0;background:var(–red);
 clip-path:polygon(50% 0%,100% 60%,80% 100%,20% 100%,0% 60%);
 display:flex;align-items:center;justify-content:center;
-animation:dP 2s ease-in-out infinite;
-box-shadow:0 2px 10px rgba(200,0,26,.3);
+animation:dropBob 2.5s ease-in-out infinite;
+box-shadow:0 2px 10px rgba(200,0,26,.32);
 }
-@keyframes dP{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.logo-drop svg{width:13px;fill:white;}
-.org-name{font-family:‘DM Sans’,sans-serif;font-size:10px;font-weight:600;letter-spacing:1.2px;color:var(–ink-mute);text-transform:uppercase;line-height:1.4;}
-.org-name strong{display:block;color:var(–red);font-size:13px;font-weight:700;letter-spacing:.3px;}
+@keyframes dropBob{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.08) translateY(-1px)}}
+.logo-drop svg{width:14px;fill:white;}
+.org-name{font-family:‘Source Sans 3’,sans-serif;font-size:10px;font-weight:600;letter-spacing:1.4px;color:var(–ink-mute);text-transform:uppercase;line-height:1.45;}
+.org-name strong{display:block;color:var(–red);font-size:14px;font-weight:900;letter-spacing:.2px;}
 
-/* BADGE with blinking dot — fixed animation */
+/* ── BADGE — dot blink via JS-toggled class for reliability ── */
 .badge{
-display:flex;align-items:center;gap:5px;
-font-family:‘DM Sans’,sans-serif;font-size:10px;font-weight:700;
-letter-spacing:1.5px;text-transform:uppercase;padding:4px 11px;
-border-radius:20px;white-space:nowrap;border:1.5px solid;
-animation:bdP 1.5s ease-in-out infinite alternate;
+display:flex;align-items:center;gap:6px;
+font-family:‘Source Sans 3’,sans-serif;font-size:10px;font-weight:700;
+letter-spacing:1.8px;text-transform:uppercase;
+padding:5px 12px;border-radius:20px;
+white-space:nowrap;border:1.5px solid;
 }
 .badge .dot{
-width:7px;height:7px;border-radius:50%;
-flex-shrink:0;
-animation:dotBl 0.8s ease-in-out infinite;
+width:8px;height:8px;border-radius:50%;flex-shrink:0;
+transition:opacity .15s, transform .15s;
 }
-@keyframes bdP{from{transform:scale(1)}to{transform:scale(1.04)}}
-@keyframes dotBl{
-0%{opacity:1;transform:scale(1);}
-50%{opacity:0.1;transform:scale(0.7);}
-100%{opacity:1;transform:scale(1);}
-}
+/* JS toggles .dot-off every 700ms */
+.badge .dot.dot-off{opacity:0.08;transform:scale(0.6);}
 .b-urgent{color:var(–red);background:var(–red-light);border-color:var(–red-mid);}
 .b-urgent .dot{background:var(–red);}
 .b-update{color:#1557B0;background:#E8F0FE;border-color:#AECBFA;}
@@ -207,182 +185,209 @@ animation:dotBl 0.8s ease-in-out infinite;
 .b-critical{color:#C85000;background:#FEF0E6;border-color:#FBCBA8;}
 .b-critical .dot{background:#C85000;}
 
-/* HEADING */
+/* ── HEADING — Libre Baskerville, auto-fit ── */
 .heading-area{padding-bottom:7px;}
 .heading{
-font-family:‘Playfair Display’,serif;font-weight:900;
-color:var(–ink);line-height:1.05;letter-spacing:-.3px;
+font-family:‘Libre Baskerville’,serif;
+font-weight:700;
+color:var(–ink);
+line-height:1.05;
+letter-spacing:-.2px;
+word-break:break-word;
 }
 .heading .acc{color:var(–red);}
 
-/* DIVIDER */
+/* ── DIVIDER ── */
 .divider{display:flex;align-items:center;gap:8px;padding-bottom:8px;}
 .dl{flex:1;height:1.5px;background:linear-gradient(90deg,var(–red),var(–red-soft),transparent);}
-.dd{
-width:8px;height:8px;flex-shrink:0;background:var(–red);
-clip-path:polygon(50% 0%,100% 60%,80% 100%,20% 100%,0% 60%);
-animation:dP 2.5s ease-in-out infinite;
+.dd{width:8px;height:8px;flex-shrink:0;background:var(–red);clip-path:polygon(50% 0%,100% 60%,80% 100%,20% 100%,0% 60%);animation:dropBob 2.5s ease-in-out infinite;}
+
+/* ── INFO + DATE WRAPPER fills 1fr ── */
+#infoDateWrapper{
+display:flex;
+flex-direction:column;
+min-height:0;
+gap:7px;
+overflow:hidden;
 }
 
-/* ══ INFO BOX — fills 1fr ══ */
+/* ── INFO BOX ── */
 .info-box{
-min-height:0;
+flex:1;min-height:0;
 background:white;
 border:1.5px solid var(–border);
 border-left:4px solid var(–red);
 border-radius:10px;
-padding:8px 12px 8px 10px;
+padding:8px 12px 8px 11px;
 position:relative;overflow:hidden;
-box-shadow:0 2px 10px rgba(150,60,40,.06),0 1px 0 rgba(255,255,255,.9) inset;
+box-shadow:0 2px 10px rgba(120,50,30,.06),0 1px 0 rgba(255,255,255,.9) inset;
 display:flex;flex-direction:column;
-margin-bottom:8px;
 }
-.info-box::after{
-content:’’;position:absolute;inset:0;pointer-events:none;
-background:linear-gradient(135deg,rgba(200,0,26,.025) 0%,transparent 50%);
-}
+.info-box::after{content:’’;position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(200,0,26,.02) 0%,transparent 50%);}
 .info-label{
-font-family:‘DM Sans’,sans-serif;font-size:9px;font-weight:700;
-letter-spacing:2.5px;color:var(–ink-mute);text-transform:uppercase;
+font-family:‘Source Sans 3’,sans-serif;
+font-size:9px;font-weight:700;letter-spacing:2.5px;
+color:var(–ink-mute);text-transform:uppercase;
 margin-bottom:6px;display:flex;align-items:center;gap:5px;flex-shrink:0;
 }
 .info-label::before{content:‘✒’;font-size:10px;}
 
-/* TYPEWRITER FONT for info text */
+/* TYPEWRITER FONT — Special Elite for info text */
 .info-text{
 font-family:‘Special Elite’,cursive;
-font-size:16px;
 color:var(–ink);
-line-height:1.55;
+line-height:1.6;
 flex:1;
 overflow:hidden;
 position:relative;z-index:1;
 word-break:break-word;
 }
 
-/* Blinking cursor — always visible during animation */
+/* Blinking cursor — CSS animation only */
 .cursor{
 display:inline-block;
-width:2px;height:.9em;
+width:2px;height:.88em;
 background:var(–red);
 vertical-align:middle;
 margin-left:2px;
-animation:curBl .55s step-end infinite;
+animation:curBl .6s step-end infinite;
 }
 @keyframes curBl{0%,100%{opacity:1}50%{opacity:0}}
 .cursor.done{display:none;}
 
-/* BLOOD TYPES */
-.bt-section{padding-bottom:8px;flex-shrink:0;}
-.bt-lbl-row{font-size:9px;font-weight:600;letter-spacing:2px;color:var(–ink-mute);text-transform:uppercase;margin-bottom:5px;}
-.bt-row{display:flex;gap:5px;flex-wrap:wrap;}
-.bt-chip{
-background:white;border:1.5px solid var(–border);color:var(–ink-soft);
-font-family:‘DM Sans’,sans-serif;font-size:12px;font-weight:700;
-padding:3px 10px;border-radius:20px;
-box-shadow:0 1px 3px rgba(150,60,40,.05);
-}
-.bt-chip.hl{
-background:var(–red);border-color:var(–red);color:white;
-box-shadow:0 3px 10px rgba(200,0,26,.3);
-animation:hlP 1.8s ease-in-out infinite alternate;
-}
-@keyframes hlP{from{box-shadow:0 3px 10px rgba(200,0,26,.25)}to{box-shadow:0 3px 18px rgba(200,0,26,.55)}}
-
-/* FOOTER */
-.footer{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;flex-shrink:0;}
-.bk-wrap{display:flex;flex-direction:column;gap:3px;}
-.bk-lbl{font-size:8px;font-weight:600;letter-spacing:2px;color:var(–ink-mute);text-transform:uppercase;}
-.bk-tag{
-display:flex;align-items:center;gap:6px;
-background:var(–red-light);border:1.5px solid var(–red-mid);
-border-radius:8px;padding:5px 10px;
-}
-.bk-icon{
-width:17px;height:17px;background:var(–red);border-radius:50%;
-display:flex;align-items:center;justify-content:center;font-size:9px;
-animation:dP 2.2s ease-in-out infinite;box-shadow:0 2px 7px rgba(200,0,26,.28);
-}
-.bk-name{font-family:‘DM Sans’,sans-serif;font-size:13px;font-weight:800;color:var(–ink);letter-spacing:.3px;}
-.bk-name span{color:var(–red);}
-.contact{text-align:right;}
-.c-title{font-size:8px;font-weight:600;letter-spacing:2px;color:var(–ink-mute);text-transform:uppercase;margin-bottom:2px;}
-.c-line{font-family:‘DM Sans’,sans-serif;font-size:11px;font-weight:500;color:var(–ink-soft);line-height:1.5;}
-.c-line .hl{color:var(–red);font-weight:700;}
-
-/* ── DATE/TIME ── */
+/* ── DATE/TIME SECTION ── */
 .dt-section{
 flex-shrink:0;
-background:linear-gradient(135deg,#FFF5F3,#FDECEA);
+background:linear-gradient(135deg,#FFF6F4,#FDECEA);
 border:1.5px solid var(–red-mid);
 border-radius:10px;
-padding:7px 12px 7px 10px;
+padding:7px 12px 7px 11px;
 position:relative;overflow:hidden;
-margin-bottom:8px;
 }
-.dt-section::before{
-content:’’;position:absolute;left:0;top:0;bottom:0;
-width:3px;background:linear-gradient(180deg,var(–red),var(–red-soft));
-}
+.dt-section::before{content:’’;position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(–red),var(–red-soft));}
 .dt-header{
 display:flex;align-items:center;gap:6px;
-font-family:‘DM Sans’,sans-serif;
+font-family:‘Source Sans 3’,sans-serif;
 font-size:9px;font-weight:700;letter-spacing:2px;
 color:var(–red);text-transform:uppercase;
-margin-bottom:4px;padding-left:6px;
+margin-bottom:4px;padding-left:8px;
 }
 .dt-header::before{content:‘📅’;font-size:11px;}
-.dt-title-line{font-family:‘DM Sans’,sans-serif;font-size:11px;font-weight:600;color:var(–ink-soft);padding-left:6px;margin-bottom:1px;}
-.dt-dates{font-family:‘Playfair Display’,serif;font-size:14px;font-weight:700;color:var(–ink);padding-left:6px;margin-bottom:4px;line-height:1.2;}
-.dt-session{display:flex;flex-direction:column;gap:0;padding-left:6px;margin-bottom:2px;}
+.dt-title-line{
+font-family:‘Source Sans 3’,sans-serif;
+font-size:11px;font-weight:600;color:var(–ink-soft);
+padding-left:8px;margin-bottom:1px;
+}
+.dt-dates{
+font-family:‘Libre Baskerville’,serif;
+font-size:13px;font-weight:700;color:var(–ink);
+padding-left:8px;margin-bottom:4px;line-height:1.25;
+}
+.dt-session{display:flex;flex-direction:column;gap:0;padding-left:8px;margin-bottom:2px;}
 .dt-session:last-child{margin-bottom:0;}
-.dt-sess-label{font-family:‘DM Sans’,sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(–red);text-transform:uppercase;}
-.dt-time{font-family:‘Special Elite’,cursive;font-size:14px;color:var(–ink);line-height:1.25;}
-.dt-venue{font-family:‘DM Sans’,sans-serif;font-size:10px;font-weight:500;color:var(–ink-mute);display:flex;align-items:flex-start;gap:3px;line-height:1.35;}
-.dt-sep{height:1px;background:linear-gradient(90deg,var(–red-soft),transparent);margin:3px 0 3px 6px;}
+.dt-sess-label{
+font-family:‘Source Sans 3’,sans-serif;
+font-size:9px;font-weight:700;letter-spacing:1.5px;
+color:var(–red);text-transform:uppercase;
+}
+/* Typewriter for schedule times */
+.dt-time{
+font-family:‘Special Elite’,cursive;
+font-size:13px;color:var(–ink);line-height:1.3;
+}
+.dt-venue{
+font-family:‘Source Sans 3’,sans-serif;
+font-size:10px;font-weight:400;color:var(–ink-mute);
+display:flex;align-items:flex-start;gap:3px;line-height:1.4;
+}
+.dt-sep{height:1px;background:linear-gradient(90deg,var(–red-soft),transparent);margin:3px 0 3px 8px;}
 
-/* ── TICKER — fixed infinite scroll ── */
+/* ── BLOOD TYPES ── */
+.bt-section{padding-bottom:7px;flex-shrink:0;}
+.bt-lbl-row{
+font-family:‘Source Sans 3’,sans-serif;
+font-size:9px;font-weight:700;letter-spacing:2px;
+color:var(–ink-mute);text-transform:uppercase;margin-bottom:5px;
+}
+.bt-row{display:flex;gap:5px;flex-wrap:wrap;}
+.bt-chip{
+background:white;
+border:2px solid var(–border);
+color:var(–ink-soft);
+font-family:‘Source Sans 3’,sans-serif;
+font-size:13px;font-weight:700;
+padding:3px 11px;border-radius:20px;
+box-shadow:0 1px 3px rgba(120,50,30,.06);
+}
+/* HIGHLIGHTED chip — strong red, clearly visible */
+.bt-chip.hl{
+background:var(–red) !important;
+border-color:var(–red) !important;
+color:#FFFFFF !important;
+font-weight:900;
+box-shadow:0 3px 12px rgba(200,0,26,.4);
+animation:hlPulse 1.6s ease-in-out infinite alternate;
+}
+@keyframes hlPulse{
+from{box-shadow:0 3px 8px rgba(200,0,26,.3);transform:scale(1);}
+to{box-shadow:0 4px 18px rgba(200,0,26,.6);transform:scale(1.05);}
+}
+
+/* ── FOOTER ── */
+.footer{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;flex-shrink:0;}
+.bk-wrap{display:flex;flex-direction:column;gap:3px;}
+.bk-lbl{font-family:‘Source Sans 3’,sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;color:var(–ink-mute);text-transform:uppercase;}
+.bk-tag{
+display:flex;align-items:center;gap:7px;
+background:var(–red-light);border:1.5px solid var(–red-mid);
+border-radius:8px;padding:5px 11px;
+}
+.bk-icon{
+width:18px;height:18px;background:var(–red);border-radius:50%;
+display:flex;align-items:center;justify-content:center;font-size:10px;
+animation:dropBob 2.2s ease-in-out infinite;
+box-shadow:0 2px 7px rgba(200,0,26,.3);
+}
+.bk-name{
+font-family:‘Source Sans 3’,sans-serif;
+font-size:14px;font-weight:900;color:var(–ink);letter-spacing:.3px;
+}
+.bk-name span{color:var(–red);}
+.contact{text-align:right;}
+.c-title{font-family:‘Source Sans 3’,sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;color:var(–ink-mute);text-transform:uppercase;margin-bottom:2px;}
+.c-line{font-family:‘Source Sans 3’,sans-serif;font-size:11px;font-weight:400;color:var(–ink-soft);line-height:1.55;}
+.c-line .hl{color:var(–red);font-weight:700;}
+
+/* ── TICKER ── */
 .ticker-wrap{
 position:absolute;bottom:0;left:0;right:0;height:26px;
 background:var(–red);overflow:hidden;z-index:12;
 }
 .ticker-track{
-display:flex;
-white-space:nowrap;
+display:flex;align-items:center;
 height:100%;
-align-items:center;
-animation:tickerScroll 20s linear infinite;
+white-space:nowrap;
+animation:tickScroll 22s linear infinite;
 will-change:transform;
 }
-@keyframes tickerScroll{
-0%{transform:translateX(0);}
-100%{transform:translateX(-50%);}
-}
+@keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ti{
-font-family:‘DM Sans’,sans-serif;font-size:10px;font-weight:600;
-letter-spacing:1.5px;color:rgba(255,255,255,.92);
-text-transform:uppercase;padding:0 18px;
-flex-shrink:0;
+font-family:‘Source Sans 3’,sans-serif;
+font-size:10px;font-weight:600;letter-spacing:1.5px;
+color:rgba(255,255,255,.94);text-transform:uppercase;
+padding:0 18px;flex-shrink:0;
 }
-.tsep{color:rgba(255,255,255,.4);padding:0 4px;font-size:8px;flex-shrink:0;}
+.tsep{color:rgba(255,255,255,.38);padding:0 4px;font-size:8px;flex-shrink:0;}
 
 /* ── TIPS ── */
 .tips{
 width:100%;max-width:640px;background:#FDFBFA;
-border:1px solid #EAE0DC;border-radius:10px;
+border:1px solid #E8E0D8;border-radius:10px;
 padding:10px 14px;display:flex;flex-direction:column;gap:3px;
 }
-.tips-ttl{font-size:10px;font-weight:600;letter-spacing:2px;color:#C0A9A3;text-transform:uppercase;margin-bottom:2px;}
-.tip{font-size:11px;color:#A09088;line-height:1.5;}
-.tip b{color:#806860;}
-
-/* infoDateWrapper fills the 1fr row correctly */
-#infoDateWrapper{
-display:flex;
-flex-direction:column;
-min-height:0;
-overflow:hidden;
-}
+.tips-ttl{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0A098;text-transform:uppercase;margin-bottom:2px;font-family:‘Source Sans 3’,sans-serif;}
+.tip{font-size:11px;color:#907868;line-height:1.5;font-family:‘Source Sans 3’,sans-serif;}
+.tip b{color:#705848;}
 </style>
 
 </head>
@@ -395,7 +400,10 @@ overflow:hidden;
     <div class="brand-drop">
       <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg"><path d="M50 5C50 5 10 55 10 80C10 105 28 125 50 125C72 125 90 105 90 80C90 55 50 5 50 5Z"/></svg>
     </div>
-    <div><div class="brand-txt">BDC RIPAS Post Generator</div><div class="brand-sub">v6 · Fixed Animations · Typewriter Font</div></div>
+    <div>
+      <div class="brand-txt">BDC RIPAS Post Generator</div>
+      <div class="brand-sub">v7 · Formal Fonts · Fixed Animations</div>
+    </div>
   </div>
 
   <div>
@@ -411,10 +419,18 @@ overflow:hidden;
   </div>
 
   <div class="fg">
-    <div class="fl ff"><label>Heading (use : for red accent)</label><input type="text" id="fH" value="URGENT: BLOOD NEEDED" maxlength="55"></div>
-    <div class="fl ff"><label>Information (typewriter text)</label><textarea id="fS">We are in critical need of blood donors at RIPAS Hospital. All blood types are needed urgently. Please come forward and help save lives today.</textarea></div>
-    <div class="fl ff"><label>Blood Types (comma-separated — blank hides row)</label><input type="text" id="fBT" value="A+, A-, B+, B-, O+, O-, AB+, AB-"></div>
-    <div class="fl"><label>Highlighted Type</label><input type="text" id="fHL" value="O-"></div>
+    <div class="fl ff"><label>Heading (use : for red accent)</label>
+      <input type="text" id="fH" value="URGENT: BLOOD NEEDED" maxlength="55">
+    </div>
+    <div class="fl ff"><label>Information (typewriter text — keep concise)</label>
+      <textarea id="fS">We are in critical need of blood donors at RIPAS Hospital. All blood types are needed urgently. Please come forward and help save lives today.</textarea>
+    </div>
+    <div class="fl ff"><label>Blood Types (comma-separated — blank hides row)</label>
+      <input type="text" id="fBT" value="A+, A-, B+, B-, O+, O-, AB+, AB-">
+    </div>
+    <div class="fl"><label>Highlighted Type</label>
+      <input type="text" id="fHL" value="O-">
+    </div>
     <div class="fl"><label>Badge</label>
       <select id="fBadge">
         <option value="urgent">🔴 URGENT</option>
@@ -423,28 +439,48 @@ overflow:hidden;
         <option value="critical">🟠 CRITICAL</option>
       </select>
     </div>
-    <div class="fl ff"><label>Ticker Text</label><input type="text" id="fTick" value="Every drop counts — your donation saves lives — visit BDC RIPAS today"></div>
-    <div class="fl"><label>Date / Tag (ticker)</label><input type="text" id="fDate" value="March 2026"></div>
+    <div class="fl ff"><label>Ticker Text</label>
+      <input type="text" id="fTick" value="Every drop counts — your donation saves lives — visit BDC RIPAS today">
+    </div>
+    <div class="fl"><label>Date / Tag (ticker)</label>
+      <input type="text" id="fDate" value="March 2026">
+    </div>
   </div>
 
   <hr class="sec-divider">
   <div class="sec-lbl" style="margin-bottom:0">📅 Date &amp; Time Schedule</div>
   <div class="fg">
-    <div class="fl ff"><label>Day / Date Title</label><input type="text" id="evTitle" value="Tarikh: Selasa / Rabu / Khamis"></div>
-    <div class="fl ff"><label>Date Numbers</label><input type="text" id="evDates" value="17, 18 &amp; 19 Mac 2026"></div>
-    <div class="fl"><label>🌅 Morning Label</label><input type="text" id="evMornLbl" value="Waktu Pagi:"></div>
-    <div class="fl"><label>🌅 Morning Hours</label><input type="text" id="evMornTime" value="8.00 pagi – 12.00 tengah hari"></div>
-    <div class="fl ff"><label>📍 Morning Venue</label><input type="text" id="evMornVenue" value="Pusat Pendermaan Darah, Hospital RIPAS"></div>
-    <div class="fl"><label>🌙 Evening Label</label><input type="text" id="evNightLbl" value="Waktu Malam (tarikh terpilih):"></div>
-    <div class="fl"><label>🌙 Evening Hours</label><input type="text" id="evNightTime" value="8.00 malam – 9.30 malam"></div>
-    <div class="fl ff"><label>📍 Evening Venue</label><input type="text" id="evNightVenue" value="Annajat Complex Hotel"></div>
+    <div class="fl ff"><label>Day / Date Title</label>
+      <input type="text" id="evTitle" value="Tarikh: Selasa / Rabu / Khamis">
+    </div>
+    <div class="fl ff"><label>Date Numbers</label>
+      <input type="text" id="evDates" value="17, 18 &amp; 19 Mac 2026">
+    </div>
+    <div class="fl"><label>🌅 Morning Label</label>
+      <input type="text" id="evMornLbl" value="Waktu Pagi:">
+    </div>
+    <div class="fl"><label>🌅 Morning Hours</label>
+      <input type="text" id="evMornTime" value="8.00 pagi – 12.00 tengah hari">
+    </div>
+    <div class="fl ff"><label>📍 Morning Venue</label>
+      <input type="text" id="evMornVenue" value="Pusat Pendermaan Darah, Hospital RIPAS">
+    </div>
+    <div class="fl"><label>🌙 Evening Label</label>
+      <input type="text" id="evNightLbl" value="Waktu Malam (tarikh terpilih):">
+    </div>
+    <div class="fl"><label>🌙 Evening Hours</label>
+      <input type="text" id="evNightTime" value="8.00 malam – 9.30 malam">
+    </div>
+    <div class="fl ff"><label>📍 Evening Venue</label>
+      <input type="text" id="evNightVenue" value="Annajat Complex Hotel">
+    </div>
     <div class="fl ff" style="flex-direction:row;align-items:center;gap:8px;">
       <input type="checkbox" id="showNight" checked style="width:15px;height:15px;accent-color:var(--red);flex-shrink:0;cursor:pointer;">
-      <label for="showNight" style="font-size:11px;color:#A08070;text-transform:none;letter-spacing:.3px;cursor:pointer;">Show evening session</label>
+      <label for="showNight" style="font-size:12px;color:#907868;text-transform:none;letter-spacing:.3px;cursor:pointer;font-family:'Source Sans 3',sans-serif;">Show evening session</label>
     </div>
     <div class="fl ff" style="flex-direction:row;align-items:center;gap:8px;">
       <input type="checkbox" id="showDT" checked style="width:15px;height:15px;accent-color:var(--red);flex-shrink:0;cursor:pointer;">
-      <label for="showDT" style="font-size:11px;color:#A08070;text-transform:none;letter-spacing:.3px;cursor:pointer;">Show date/time section on card</label>
+      <label for="showDT" style="font-size:12px;color:#907868;text-transform:none;letter-spacing:.3px;cursor:pointer;font-family:'Source Sans 3',sans-serif;">Show date/time section on card</label>
     </div>
   </div>
 
@@ -475,32 +511,33 @@ overflow:hidden;
   <div class="content">
 
 ```
-<!-- 1. TOP BAR -->
+<!-- TOP BAR -->
 <div class="top-bar">
   <div class="logo-area">
     <div class="logo-drop">
-      <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg"><path d="M50 5C50 5 10 55 10 80C10 105 28 125 50 125C72 125 90 105 90 80C90 55 50 5 50 5Z"/></svg>
+      <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 5C50 5 10 55 10 80C10 105 28 125 50 125C72 125 90 105 90 80C90 55 50 5 50 5Z"/>
+      </svg>
     </div>
     <div class="org-name"><strong>BDC RIPAS</strong>Blood Donation Centre</div>
   </div>
   <div class="badge b-urgent" id="cardBadge">
-    <span class="dot"></span>
+    <span class="dot" id="badgeDot"></span>
     <span id="cardBadgeTxt">URGENT</span>
   </div>
 </div>
 
-<!-- 2. HEADING -->
+<!-- HEADING -->
 <div class="heading-area">
   <div class="heading" id="cardHeading">URGENT: <span class="acc">BLOOD NEEDED</span></div>
 </div>
 
-<!-- 3. DIVIDER -->
+<!-- DIVIDER -->
 <div class="divider"><div class="dl"></div><div class="dd"></div></div>
 
-<!-- 4. INFO + DATE/TIME in 1fr -->
+<!-- INFO + DATE/TIME — fills 1fr -->
 <div id="infoDateWrapper">
-
-  <div class="info-box" style="flex:1;min-height:0;">
+  <div class="info-box">
     <div class="info-label">Information</div>
     <div class="info-text" id="infoText">
       <span id="writtenText"></span><span class="cursor" id="cursor"></span>
@@ -523,16 +560,15 @@ overflow:hidden;
       <div class="dt-venue"><span>📍</span><span id="dtNightVenue">Annajat Complex Hotel</span></div>
     </div>
   </div>
+</div>
 
-</div><!-- /infoDateWrapper -->
-
-<!-- 5. BLOOD TYPES -->
+<!-- BLOOD TYPES -->
 <div class="bt-section" id="btSection">
   <div class="bt-lbl-row">Blood Types Needed</div>
   <div class="bt-row" id="cardBT"></div>
 </div>
 
-<!-- 6. FOOTER -->
+<!-- FOOTER -->
 <div class="footer">
   <div class="bk-wrap">
     <span class="bk-lbl">Register with</span>
@@ -565,14 +601,28 @@ overflow:hidden;
 
 <div class="tips">
   <div class="tips-ttl">💡 Tips</div>
-  <div class="tip"><b>v6 fixes:</b> CSS variable bug fixed (all colors/animations now work), ticker scrolls smoothly, badge dot blinks, typewriter font (Special Elite) used throughout.</div>
-  <div class="tip"><b>GIF export</b> — captures live frames with animations baked in. Use Chrome on desktop for best results.</div>
-  <div class="tip"><b>MP4 export</b> saves as .webm — open in any modern browser or convert with Handbrake.</div>
+  <div class="tip"><b>Fonts:</b> Libre Baskerville (headings) · Source Sans 3 (body/labels — large-print friendly) · Special Elite (typewriter info + schedule times).</div>
+  <div class="tip"><b>Badge dot</b> blinks via JavaScript toggle — works reliably across all browsers including Safari/iOS.</div>
+  <div class="tip"><b>Highlighted blood type</b> now shows as solid red chip with white text — clearly visible.</div>
+  <div class="tip"><b>GIF/MP4:</b> Use Chrome on desktop. Animations (ticker, dot blink) are captured live frame-by-frame.</div>
 </div>
 
 <script>
 var currentFormat = 'square';
 var writeTimer = null;
+var dotBlinkInterval = null;
+
+/* ── JS-driven badge dot blink (works in all browsers incl. Safari) ── */
+function startDotBlink() {
+  if (dotBlinkInterval) clearInterval(dotBlinkInterval);
+  var dot = document.getElementById('badgeDot');
+  var on = true;
+  dotBlinkInterval = setInterval(function() {
+    on = !on;
+    if (on) dot.classList.remove('dot-off');
+    else dot.classList.add('dot-off');
+  }, 700);
+}
 
 function setFormat(fmt, btn) {
   currentFormat = fmt;
@@ -596,16 +646,34 @@ function scaleCard() {
 }
 window.addEventListener('resize', scaleCard);
 
-/* Font size: bigger for short text, smaller for long */
+/* Font size for info text — Special Elite is slightly wider */
 function calcFontSize(text) {
   var n = text.length;
   var sq = currentFormat === 'square';
-  if (n <= 80)  return sq ? '18px' : '21px';
-  if (n <= 140) return sq ? '16px' : '19px';
-  if (n <= 200) return sq ? '15px' : '17px';
-  if (n <= 280) return sq ? '14px' : '16px';
-  if (n <= 360) return sq ? '13px' : '15px';
-  return sq ? '12px' : '14px';
+  if (n <= 80)  return sq ? '17px' : '20px';
+  if (n <= 140) return sq ? '15px' : '18px';
+  if (n <= 200) return sq ? '14px' : '16px';
+  if (n <= 280) return sq ? '13px' : '15px';
+  if (n <= 360) return sq ? '12px' : '14px';
+  return sq ? '11px' : '13px';
+}
+
+/* Heading font size — prevents cutoff */
+function calcHeadingSize(text, isVertical) {
+  var n = text.length;
+  if (isVertical) {
+    if (n <= 14) return '48px';
+    if (n <= 20) return '42px';
+    if (n <= 28) return '36px';
+    if (n <= 36) return '30px';
+    return '26px';
+  } else {
+    if (n <= 14) return '40px';
+    if (n <= 20) return '34px';
+    if (n <= 28) return '28px';
+    if (n <= 36) return '24px';
+    return '21px';
+  }
 }
 
 /* Typewriter animation */
@@ -616,8 +684,7 @@ function animateWrite(text, onDone) {
   el.textContent = '';
   cur.classList.remove('done');
   var i = 0;
-  // adaptive speed: ~3-4 seconds total
-  var speed = Math.max(20, Math.min(50, 3500 / Math.max(text.length, 1)));
+  var speed = Math.max(18, Math.min(55, 3800 / Math.max(text.length, 1)));
   writeTimer = setInterval(function() {
     if (i < text.length) {
       el.textContent += text[i];
@@ -632,7 +699,7 @@ function animateWrite(text, onDone) {
 }
 
 function applyChanges(animate) {
-  // Heading
+  /* ── Heading ── */
   var rawH = document.getElementById('fH').value || 'BLOOD NEEDED';
   var parts = rawH.split(':');
   var hHTML = parts.length >= 2
@@ -640,10 +707,9 @@ function applyChanges(animate) {
     : '<span class="acc">' + rawH + '</span>';
   var hEl = document.getElementById('cardHeading');
   hEl.innerHTML = hHTML;
-  var hl = rawH.length, isV = currentFormat === 'vertical';
-  hEl.style.fontSize = hl > 30 ? (isV ? '32px' : '26px') : hl > 22 ? (isV ? '40px' : '32px') : (isV ? '48px' : '40px');
+  hEl.style.fontSize = calcHeadingSize(rawH, currentFormat === 'vertical');
 
-  // Info text
+  /* ── Info text ── */
   var txt = document.getElementById('fS').value || '';
   document.getElementById('infoText').style.fontSize = calcFontSize(txt);
   if (animate) {
@@ -653,7 +719,7 @@ function applyChanges(animate) {
     document.getElementById('cursor').classList.add('done');
   }
 
-  // Blood types
+  /* ── Blood types ── */
   var btVal = document.getElementById('fBT').value.trim();
   var hlVal = document.getElementById('fHL').value.trim().toUpperCase();
   var btRow = document.getElementById('cardBT');
@@ -661,9 +727,11 @@ function applyChanges(animate) {
   btRow.innerHTML = '';
   if (btVal) {
     btVal.split(',').forEach(function(t) {
+      var trimmed = t.trim();
       var c = document.createElement('span');
-      c.className = 'bt-chip' + (t.trim().toUpperCase() === hlVal ? ' hl' : '');
-      c.textContent = t.trim();
+      var isHL = trimmed.toUpperCase() === hlVal;
+      c.className = 'bt-chip' + (isHL ? ' hl' : '');
+      c.textContent = trimmed;
       btRow.appendChild(c);
     });
     btSec.style.display = 'block';
@@ -671,7 +739,7 @@ function applyChanges(animate) {
     btSec.style.display = 'none';
   }
 
-  // Date/Time section
+  /* ── Date/Time section ── */
   var showDT = document.getElementById('showDT').checked;
   var dtSec = document.getElementById('dtSection');
   dtSec.style.display = showDT ? 'block' : 'none';
@@ -689,23 +757,22 @@ function applyChanges(animate) {
     document.getElementById('dtSep').style.display = showN ? 'block' : 'none';
   }
 
-  // Badge
+  /* ── Badge ── */
   var bv = document.getElementById('fBadge').value;
   var bEl = document.getElementById('cardBadge');
   ['b-urgent','b-update','b-info','b-critical'].forEach(c => bEl.classList.remove(c));
   bEl.classList.add('b-' + bv);
   document.getElementById('cardBadgeTxt').textContent = bv.toUpperCase();
 
-  // Ticker — doubled for seamless loop
+  /* ── Ticker ── */
   var tick = document.getElementById('fTick').value;
   var date = document.getElementById('fDate').value;
   var seg = '<span class="ti">' + tick + '</span>'
-           + '<span class="tsep">◆</span>'
-           + '<span class="ti">' + date + '</span>'
-           + '<span class="tsep">◆</span>'
-           + '<span class="ti">BloodKad — register your donor card</span>'
-           + '<span class="tsep">◆</span>';
-  // Duplicate for seamless CSS loop
+    + '<span class="tsep">◆</span>'
+    + '<span class="ti">' + date + '</span>'
+    + '<span class="tsep">◆</span>'
+    + '<span class="ti">BloodKad — register your donor card</span>'
+    + '<span class="tsep">◆</span>';
   document.getElementById('cardTicker').innerHTML = seg + seg;
 
   setTimeout(scaleCard, 100);
@@ -713,8 +780,7 @@ function applyChanges(animate) {
 
 /* Progress helpers */
 function setP(msg, pct) {
-  var w = document.getElementById('progWrap');
-  w.classList.add('show');
+  document.getElementById('progWrap').classList.add('show');
   document.getElementById('progTxt').textContent = msg;
   document.getElementById('progFill').style.width = pct + '%';
 }
@@ -728,17 +794,14 @@ function dis(v) {
 async function exportGIF() {
   dis(true);
   setP('Preparing...', 2);
-
-  // Stop typewriter, show full text
   if (writeTimer) clearInterval(writeTimer);
   document.getElementById('writtenText').textContent = document.getElementById('fS').value || '';
   document.getElementById('cursor').classList.add('done');
 
-  // Scale to 1:1 for capture
   var scaler = document.getElementById('scaler');
   var prevT = scaler.style.transform;
   scaler.style.transform = 'scale(1)';
-  await new Promise(r => setTimeout(r, 120));
+  await new Promise(r => setTimeout(r, 150));
 
   var card = document.getElementById('card');
   var W = card.offsetWidth, H = card.offsetHeight;
@@ -746,66 +809,58 @@ async function exportGIF() {
   var frames = [];
 
   for (var i = 0; i < total; i++) {
-    setP('Capturing frame ' + (i + 1) + '/' + total, 2 + (i / total) * 52);
+    setP('Capturing frame ' + (i+1) + '/' + total, 2 + (i/total)*52);
     await new Promise(r => requestAnimationFrame(r));
-    await new Promise(r => setTimeout(r, 1000 / fps));
+    await new Promise(r => setTimeout(r, Math.round(1000/fps)));
     try {
       var canvas = await html2canvas(card, {
-        scale: 1, useCORS: true, allowTaint: true,
-        backgroundColor: '#FFFAF8', logging: false, imageTimeout: 3000
+        scale:1, useCORS:true, allowTaint:true,
+        backgroundColor:'#FFFAF8', logging:false, imageTimeout:3000
       });
       frames.push(canvas);
-    } catch(e) { console.warn('Frame capture:', e); }
+    } catch(e) { console.warn('Frame:', e); }
   }
-
   scaler.style.transform = prevT;
 
-  if (!frames.length) {
-    alert('Capture failed. Please use Chrome on desktop.');
-    dis(false); clrP(); return;
-  }
+  if (!frames.length) { alert('Capture failed — use Chrome on desktop.'); dis(false); clrP(); return; }
 
   setP('Encoding GIF...', 56);
   await new Promise(r => setTimeout(r, 30));
 
   try {
-    var buf = new Uint8Array(W * H * frames.length * 5 + 2097152);
-    var writer = new GifWriter(buf, W, H, { loop: 0 });
-
+    var buf = new Uint8Array(W*H*frames.length*5 + 2097152);
+    var writer = new GifWriter(buf, W, H, {loop:0});
     for (var fi = 0; fi < frames.length; fi++) {
-      setP('Encoding ' + (fi + 1) + '/' + frames.length, 56 + (fi / frames.length) * 40);
+      setP('Encoding ' + (fi+1) + '/' + frames.length, 56 + (fi/frames.length)*40);
       await new Promise(r => setTimeout(r, 1));
       var ctx = frames[fi].getContext('2d');
-      var imgD = ctx.getImageData(0, 0, W, H).data;
-      var palMap = {}, pal = [], indexed = new Uint8Array(W * H);
-
-      for (var p = 0; p < W * H; p++) {
-        var r2 = imgD[p*4]>>2<<2, g2 = imgD[p*4+1]>>2<<2, b2 = imgD[p*4+2]>>2<<2;
-        var key = r2 + ',' + g2 + ',' + b2;
-        if (palMap[key] === undefined) { palMap[key] = pal.length / 3; pal.push(r2, g2, b2); }
-        indexed[p] = Math.min(palMap[key], 255);
+      var imgD = ctx.getImageData(0,0,W,H).data;
+      var palMap={}, pal=[], indexed=new Uint8Array(W*H);
+      for (var p=0; p<W*H; p++) {
+        var r2=imgD[p*4]>>2<<2, g2=imgD[p*4+1]>>2<<2, b2=imgD[p*4+2]>>2<<2;
+        var key=r2+','+g2+','+b2;
+        if (palMap[key]===undefined){palMap[key]=pal.length/3;pal.push(r2,g2,b2);}
+        indexed[p]=Math.min(palMap[key],255);
       }
-      while (pal.length < 768) pal.push(0,0,0);
-      pal = pal.slice(0, 768);
-      var upal = new Uint32Array(256);
-      for (var pi = 0; pi < 256; pi++) upal[pi] = (pal[pi*3] << 16) | (pal[pi*3+1] << 8) | pal[pi*3+2];
-      writer.addFrame(0, 0, W, H, indexed, { palette: upal, delay: Math.round(100 / fps) });
+      while(pal.length<768)pal.push(0,0,0);
+      pal=pal.slice(0,768);
+      var upal=new Uint32Array(256);
+      for(var pi=0;pi<256;pi++) upal[pi]=(pal[pi*3]<<16)|(pal[pi*3+1]<<8)|pal[pi*3+2];
+      writer.addFrame(0,0,W,H,indexed,{palette:upal,delay:Math.round(100/fps)});
     }
-
-    var gifBuf = buf.slice(0, writer.end());
-    var blob = new Blob([gifBuf], { type: 'image/gif' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a'); a.href = url; a.download = 'BDC_RIPAS_Post.gif'; a.click();
+    var gifBuf=buf.slice(0,writer.end());
+    var blob=new Blob([gifBuf],{type:'image/gif'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='BDC_RIPAS_Post.gif';a.click();
     setP('✅ GIF saved!', 100);
-    setTimeout(function() { clrP(); dis(false); }, 2000);
-
+    setTimeout(function(){clrP();dis(false);},2000);
   } catch(e) {
-    console.error('GIF encode error:', e);
+    console.error('GIF error:',e);
     setP('Saving PNG fallback...', 90);
-    frames[0].toBlob(function(blob) {
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a'); a.href = url; a.download = 'BDC_RIPAS_Post.png'; a.click();
-      setTimeout(function() { clrP(); dis(false); }, 1500);
+    frames[0].toBlob(function(blob){
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');a.href=url;a.download='BDC_RIPAS_Post.png';a.click();
+      setTimeout(function(){clrP();dis(false);},1500);
     });
   }
 }
@@ -825,40 +880,37 @@ async function exportMP4() {
   var card = document.getElementById('card');
   var W = card.offsetWidth, H = card.offsetHeight;
   var off = document.createElement('canvas');
-  off.width = W; off.height = H;
+  off.width=W; off.height=H;
   var ctx = off.getContext('2d');
   var stream = off.captureStream(24);
-  var mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
-    ? 'video/webm;codecs=vp9' : 'video/webm';
-  var rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 5000000 });
+  var mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+  var rec = new MediaRecorder(stream, {mimeType:mime, videoBitsPerSecond:5000000});
   var chunks = [];
-
-  rec.ondataavailable = function(e) { if (e.data.size > 0) chunks.push(e.data); };
-  rec.onstop = function() {
+  rec.ondataavailable = function(e){if(e.data.size>0)chunks.push(e.data);};
+  rec.onstop = function(){
     setP('Saving...', 95);
-    var blob = new Blob(chunks, { type: 'video/webm' });
+    var blob = new Blob(chunks,{type:'video/webm'});
     var url = URL.createObjectURL(blob);
-    var a = document.createElement('a'); a.href = url; a.download = 'BDC_RIPAS_Post.webm'; a.click();
+    var a = document.createElement('a');a.href=url;a.download='BDC_RIPAS_Post.webm';a.click();
     scaler.style.transform = prevT;
-    setTimeout(function() { clrP(); dis(false); }, 1500);
+    setTimeout(function(){clrP();dis(false);},1500);
   };
-
   rec.start(100);
   setP('Recording...', 5);
 
-  var elapsed = 0, totalDur = 7000, interval = 1000 / 24;
+  var elapsed=0, totalDur=7000, interval=1000/24;
   async function frame() {
     if (elapsed >= totalDur) { rec.stop(); return; }
     try {
       var snap = await html2canvas(card, {
-        scale: 1, useCORS: true, allowTaint: true,
-        backgroundColor: '#FFFAF8', logging: false, imageTimeout: 800
+        scale:1, useCORS:true, allowTaint:true,
+        backgroundColor:'#FFFAF8', logging:false, imageTimeout:800
       });
-      ctx.clearRect(0, 0, W, H);
-      ctx.drawImage(snap, 0, 0);
+      ctx.clearRect(0,0,W,H);
+      ctx.drawImage(snap,0,0);
     } catch(e) {}
     elapsed += interval;
-    setP('Recording ' + (elapsed / 1000).toFixed(1) + 's / 7s', 5 + (elapsed / totalDur) * 85);
+    setP('Recording ' + (elapsed/1000).toFixed(1) + 's / 7s', 5+(elapsed/totalDur)*85);
     setTimeout(frame, interval);
   }
   frame();
@@ -866,6 +918,7 @@ async function exportMP4() {
 
 // Init
 applyChanges(true);
+startDotBlink();
 setTimeout(scaleCard, 400);
 </script>
 
